@@ -6,3 +6,5 @@ This is a practice module for front end.
 - Next.js
 - ShadCN
 - React
+
+📝 Write a short summary of your learning this PBI description
