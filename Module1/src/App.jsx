@@ -1,23 +1,20 @@
 import { useState } from "react";
 import "./styles.css";
+import { NewTodoForm } from "./NewTodoForm";
 
 // component
 function App() {
-  const [newItem, setNewItem] = useState("");
+  // const [newItem, setNewItem] = useState("");
   // state cannot change, immutable. change using setNewItem
   const [todos, setTodos] = useState([]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    // pass in function
+  function addTodo(title) {
     setTodos((currentTodos) => {
       return [
         ...currentTodos,
-        { id: crypto.randomUUID(), title: newItem, completed: false },
+        { id: crypto.randomUUID(), title, completed: false },
       ];
     });
-
-    setNewItem("");
   }
 
   function toggleTodo(id, completed) {
@@ -44,23 +41,10 @@ function App() {
     // <></>: fragment/empty tag
     // used when return multiple elemetes without add extra HTML tag
     <>
-      {/* avoid conflicts or confusion with JS, where uses class */}
-      <form onSubmit={handleSubmit} className="new-item-form">
-        <div className="form-row">
-          <label htmlFor="item">New Item</label>
-          <input
-            value={newItem}
-            // pass in value
-            onChange={(e) => setNewItem(e.target.value)}
-            type="text"
-            id="item"
-          />
-        </div>
-
-        <button className="btn">Add</button>
-      </form>
+      <NewTodoForm onSubmit={addTodo} />
       <h1 className="header">Todo List</h1>
       <ul className="list">
+        {todos.length === 0 && "No todos"}
         {todos.map((todo) => {
           return (
             <li key={todo.id}>
@@ -73,7 +57,10 @@ function App() {
                 {todo.title}
               </label>
               <button
+                // calling the function
                 onClick={() => deleteTodo(todo.id)}
+                // WRONG: onClick={deleteTodo(todo.id)}
+                // pass in the result of deleteTodo
                 className="btn btn-danger"
               >
                 Delete
