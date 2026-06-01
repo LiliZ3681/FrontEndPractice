@@ -2,7 +2,16 @@
   "tasks": [
     {
       "id": "1",
-      "text": "grocery shopping"
+      "text": "grocery shopping new"
+    },
+    {
+      "id": "LgOm5lfzLNQ",
+      "text": "a new task"
+    },
+    {
+      "id": "sX5_pz1LpFY",
+      "text": "add new task"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
