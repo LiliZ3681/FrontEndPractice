@@ -15,7 +15,6 @@ export default function AddTaskPage() {
     if (!taskText.trim()) return;
 
     await addTodo({
-      id: crypto.randomUUID(),
       text: taskText,
     });
 

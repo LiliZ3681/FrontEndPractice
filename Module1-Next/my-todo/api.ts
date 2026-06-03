@@ -1,4 +1,4 @@
-import { ITask } from "./types/tasks";
+import { ITask, NewTask } from "./types/tasks";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +18,7 @@ export const getAllTodos = async (): Promise<ITask[]> => {
   return todos;
 };
 
-export const addTodo = async (todo: ITask): Promise<ITask> => {
+export const addTodo = async (todo: NewTask): Promise<ITask> => {
   const res = await fetch(`${baseUrl}/tasks`, {
     method: "POST",
     headers: {
