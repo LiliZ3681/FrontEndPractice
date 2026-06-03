@@ -4,6 +4,7 @@ import { addTodo } from "@/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function AddTaskPage() {
   const router = useRouter();
@@ -35,12 +36,14 @@ export default function AddTaskPage() {
             className="input input-bordered w-full"
           />
           <div className="flex gap-3">
-            <button className="btn btn-primary uppercase" type="submit">
+            <Button className="uppercase" type="submit">
               Save
-            </button>
-            <Link href="/" className="btn btn-ghost uppercase">
-              Cancel
-            </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/" className="uppercase">
+                Cancel
+              </Link>
+            </Button>
           </div>
         </form>
       </div>
