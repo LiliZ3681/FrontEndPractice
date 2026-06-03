@@ -1,6 +1,6 @@
 import { ITask } from "./types/tasks";
 
-const baseUrl = "http://localhost:3001";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const getAllTodos = async (): Promise<ITask[]> => {
   // Always get fresh data from the server.
