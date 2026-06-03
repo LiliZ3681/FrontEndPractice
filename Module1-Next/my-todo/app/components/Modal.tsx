@@ -1,15 +1,18 @@
+// Old dialog version kept for reference.
+// The current add flow uses app/add-task/page.tsx instead.
 "use client";
 
-import { FormEvent, useState } from "react";
+import React, { useRef, useState } from "react";
 
 interface ModalProps {
   onSubmit: (text: string) => Promise<void>;
 }
 
 const Modal: React.FC<ModalProps> = ({ onSubmit }) => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [taskText, setTaskText] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!taskText.trim()) return;
@@ -17,12 +20,11 @@ const Modal: React.FC<ModalProps> = ({ onSubmit }) => {
     await onSubmit(taskText);
     setTaskText("");
 
-    const modal = document.getElementById("my_modal_3") as HTMLDialogElement | null;
-    modal?.close();
+    dialogRef.current?.close();
   };
 
   return (
-    <dialog id="my_modal_3" className="modal">
+    <dialog ref={dialogRef} className="modal">
       <div className="modal-box">
         <form method="dialog">
           {/* if there is a button in form, it will close the modal */}
