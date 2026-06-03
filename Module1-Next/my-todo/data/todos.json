@@ -1,0 +1,29 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "text": "grocery shopping new"
+    },
+    {
+      "id": "LgOm5lfzLNQ",
+      "text": "a new task"
+    },
+    {
+      "id": "sX5_pz1LpFY",
+      "text": "add new task"
+    },
+    {
+      "id": "_0FZPZvaAio",
+      "text": "dsada"
+    },
+    {
+      "id": "qGOPcdPTxGY",
+      "text": "wdwdwd"
+    },
+    {
+      "id": "8g9gGa5Ntik",
+      "text": "fwerw "
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
