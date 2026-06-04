@@ -3,6 +3,8 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface ModalProps {
   onSubmit: (text: string) => Promise<void>;
@@ -24,26 +26,30 @@ const Modal: React.FC<ModalProps> = ({ onSubmit }) => {
   };
 
   return (
-    <dialog ref={dialogRef} className="modal">
-      <div className="modal-box">
+    <dialog ref={dialogRef} className="backdrop:bg-black/50">
+      <div className="fixed left-1/2 top-1/2 w-[min(24rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 rounded-lg border bg-background p-6 shadow-lg">
         <form method="dialog">
           {/* if there is a button in form, it will close the modal */}
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+          <Button
+            type="submit"
+            variant="ghost"
+            size="icon"
+            className="absolute right-2 top-2"
+          >
             ✕
-          </button>
+          </Button>
         </form>
         <h3 className="font-bold text-lg">Add New Task</h3>
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
-          <input
+          <Input
             value={taskText}
             onChange={(e) => setTaskText(e.target.value)}
             type="text"
             placeholder="Type your task"
-            className="input input-bordered w-full"
           />
-          <button className="btn btn-primary uppercase" type="submit">
+          <Button className="uppercase" type="submit">
             Add
-          </button>
+          </Button>
         </form>
       </div>
     </dialog>
