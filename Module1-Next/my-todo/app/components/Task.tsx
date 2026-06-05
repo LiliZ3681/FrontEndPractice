@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdCheck, MdClose, MdDeleteOutline } from "react-icons/md";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { TableCell, TableRow } from "@/components/ui/table";
 
 interface TaskProps {
   task: ITask;
@@ -39,60 +42,63 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   };
 
   return (
-    <tr className="hover:bg-base-300">
-      <td>
+    <TableRow>
+      <TableCell>
         {isEditing ? (
-          <input
+          <Input
             value={taskText}
             onChange={(e) => setTaskText(e.target.value)}
-            className="input input-bordered input-sm w-full"
           />
         ) : (
           task.text
         )}
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         <div className="flex items-center gap-3">
           {isEditing ? (
             <>
-              <button
+              <Button
                 type="button"
                 onClick={handleEdit}
-                className="btn btn-ghost btn-sm btn-square tooltip"
-                data-tip="Save"
+                variant="ghost"
+                size="icon"
+                title="Save"
               >
                 <MdCheck size={20} />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={handleCancel}
-                className="btn btn-ghost btn-sm btn-square tooltip"
-                data-tip="Cancel"
+                variant="ghost"
+                size="icon"
+                title="Cancel"
               >
                 <MdClose size={20} />
-              </button>
+              </Button>
             </>
           ) : (
-            <button
+            <Button
               type="button"
               onClick={() => setIsEditing(true)}
-              className="btn btn-ghost btn-sm btn-square tooltip"
-              data-tip="Edit"
+              variant="ghost"
+              size="icon"
+              title="Edit"
             >
               <CiEdit size={20} />
-            </button>
+            </Button>
           )}
-          <button
+          <Button
             type="button"
             onClick={handleDelete}
-            className="btn btn-ghost btn-sm btn-square tooltip"
-            data-tip="Delete"
+            variant="ghost"
+            size="icon"
+            title="Delete"
           >
             <MdDeleteOutline size={20} />
-          </button>
+          </Button>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   );
 };
 

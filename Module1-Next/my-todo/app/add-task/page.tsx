@@ -4,6 +4,8 @@ import { addTodo } from "@/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function AddTaskPage() {
   const router = useRouter();
@@ -27,20 +29,21 @@ export default function AddTaskPage() {
       <div className="my-5 flex flex-col gap-4">
         <h1 className="text-2xl font-bold text-center">Add New Task</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
+          <Input
             value={taskText}
             onChange={(e) => setTaskText(e.target.value)}
             type="text"
             placeholder="Type your task"
-            className="input input-bordered w-full"
           />
           <div className="flex gap-3">
-            <button className="btn btn-primary uppercase" type="submit">
+            <Button className="uppercase" type="submit">
               Save
-            </button>
-            <Link href="/" className="btn btn-ghost uppercase">
-              Cancel
-            </Link>
+            </Button>
+            <Button asChild>
+              <Link href="/" className="uppercase">
+                Cancel
+              </Link>
+            </Button>
           </div>
         </form>
       </div>
