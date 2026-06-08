@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 
 type AddTaskForm = {
   text: string;
+  description: string;
 };
 
 export default function AddTaskPage() {
@@ -21,6 +22,7 @@ export default function AddTaskPage() {
 
     await addTodo({
       text: data.text,
+      description: data.description,
     });
 
     router.push("/");
@@ -36,6 +38,11 @@ export default function AddTaskPage() {
             {...register("text")}
             type="text"
             placeholder="Type your task"
+          />
+          <Input
+            {...register("description")}
+            type="text"
+            placeholder="Type task description"
           />
           <div className="flex gap-3">
             <Button className="uppercase" type="submit">

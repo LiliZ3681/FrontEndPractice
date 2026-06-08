@@ -19,6 +19,7 @@ const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
       <TableHeader>
         <TableRow className="hover:bg-transparent">
           <TableHead>Tasks</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>

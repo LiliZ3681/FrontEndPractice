@@ -18,6 +18,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [taskText, setTaskText] = useState(task.text);
+  const [taskDesc, setTaskDesc] = useState(task.description);
 
   const handleEdit = async () => {
     if (!taskText.trim()) return;
@@ -25,6 +26,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     await editTodo({
       ...task,
       text: taskText,
+      description: taskDesc,
     });
 
     setIsEditing(false);
@@ -33,6 +35,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
 
   const handleCancel = () => {
     setTaskText(task.text);
+    setTaskDesc(task.description);
     setIsEditing(false);
   };
 
@@ -51,6 +54,16 @@ const Task: React.FC<TaskProps> = ({ task }) => {
           />
         ) : (
           task.text
+        )}
+      </TableCell>
+      <TableCell>
+        {isEditing ? (
+          <Input
+            value={taskDesc}
+            onChange={(e) => setTaskDesc(e.target.value)}
+          />
+        ) : (
+          task.description
         )}
       </TableCell>
       <TableCell>

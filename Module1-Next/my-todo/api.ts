@@ -41,7 +41,10 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ text: todo.text }),
+    body: JSON.stringify({
+      text: todo.text,
+      description: todo.description,
+    }),
   });
 
   if (!res.ok) {
