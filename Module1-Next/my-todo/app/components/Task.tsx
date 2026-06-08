@@ -1,15 +1,13 @@
 "use client";
 
-import { deleteTodo, editTodo } from "@/api";
+import { deleteTodo } from "@/api";
 import { ITask } from "@/types/tasks";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { CiEdit } from "react-icons/ci";
-import { MdCheck, MdClose, MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 
 interface TaskProps {
   task: ITask;
@@ -17,28 +15,6 @@ interface TaskProps {
 
 const Task: React.FC<TaskProps> = ({ task }) => {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
-  const [taskText, setTaskText] = useState(task.text);
-  const [taskDesc, setTaskDesc] = useState(task.description);
-
-  const handleEdit = async () => {
-    if (!taskText.trim()) return;
-
-    await editTodo({
-      ...task,
-      text: taskText,
-      description: taskDesc,
-    });
-
-    setIsEditing(false);
-    router.refresh();
-  };
-
-  const handleCancel = () => {
-    setTaskText(task.text);
-    setTaskDesc(task.description);
-    setIsEditing(false);
-  };
 
   const handleDelete = async () => {
     await deleteTodo(task.id);
@@ -47,60 +23,15 @@ const Task: React.FC<TaskProps> = ({ task }) => {
 
   return (
     <TableRow>
-      <TableCell>
-        {isEditing ? (
-          <Input
-            value={taskText}
-            onChange={(e) => setTaskText(e.target.value)}
-          />
-        ) : (
-          task.text
-        )}
-      </TableCell>
-      <TableCell>
-        {isEditing ? (
-          <Textarea
-            value={taskDesc}
-            onChange={(e) => setTaskDesc(e.target.value)}
-          />
-        ) : (
-          task.description
-        )}
-      </TableCell>
+      <TableCell>{task.text}</TableCell>
+      <TableCell>{task.description}</TableCell>
       <TableCell>
         <div className="flex items-center gap-3">
-          {isEditing ? (
-            <>
-              <Button
-                type="button"
-                onClick={handleEdit}
-                variant="ghost"
-                size="icon"
-                title="Save"
-              >
-                <MdCheck size={20} />
-              </Button>
-              <Button
-                type="button"
-                onClick={handleCancel}
-                variant="ghost"
-                size="icon"
-                title="Cancel"
-              >
-                <MdClose size={20} />
-              </Button>
-            </>
-          ) : (
-            <Button
-              type="button"
-              onClick={() => setIsEditing(true)}
-              variant="ghost"
-              size="icon"
-              title="Edit"
-            >
+          <Button asChild variant="ghost" size="icon" title="Edit">
+            <Link href={`/edit-task/${task.id}`}>
               <CiEdit size={20} />
-            </Button>
-          )}
+            </Link>
+          </Button>
           <Button
             type="button"
             onClick={handleDelete}
