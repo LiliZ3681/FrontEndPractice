@@ -24,7 +24,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   return (
     <TableRow>
       <TableCell>{task.text}</TableCell>
-      <TableCell>{task.description}</TableCell>
+      <TableCell className="whitespace-pre-wrap">{task.description}</TableCell>
       <TableCell>
         <div className="flex items-center gap-3">
           <Button asChild variant="ghost" size="icon" title="Edit">
