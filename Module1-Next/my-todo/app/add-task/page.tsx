@@ -3,21 +3,24 @@
 import { addTodo } from "@/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+// import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+
+type AddTaskForm = {
+  text: string;
+};
 
 export default function AddTaskPage() {
   const router = useRouter();
-  const [taskText, setTaskText] = useState("");
+  const { register, handleSubmit } = useForm<AddTaskForm>();
 
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!taskText.trim()) return;
+  const saveTask = async (data: AddTaskForm) => {
+    if (!data.text.trim()) return;
 
     await addTodo({
-      text: taskText,
+      text: data.text,
     });
 
     router.push("/");
@@ -28,10 +31,9 @@ export default function AddTaskPage() {
     <main className="w-full max-w-4xl mx-auto mt-4 px-4">
       <div className="my-5 flex flex-col gap-4">
         <h1 className="text-2xl font-bold text-center">Add New Task</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(saveTask)} className="flex flex-col gap-4">
           <Input
-            value={taskText}
-            onChange={(e) => setTaskText(e.target.value)}
+            {...register("text")}
             type="text"
             placeholder="Type your task"
           />
