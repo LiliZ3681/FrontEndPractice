@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
 
 type AddTaskForm = {
   text: string;
@@ -39,9 +40,8 @@ export default function AddTaskPage() {
             type="text"
             placeholder="Type your task"
           />
-          <Input
+          <Textarea
             {...register("description")}
-            type="text"
             placeholder="Type task description"
           />
           <div className="flex gap-3">

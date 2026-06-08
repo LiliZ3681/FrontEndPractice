@@ -9,6 +9,7 @@ import { MdCheck, MdClose, MdDeleteOutline } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 
 interface TaskProps {
   task: ITask;
@@ -58,7 +59,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
       </TableCell>
       <TableCell>
         {isEditing ? (
-          <Input
+          <Textarea
             value={taskDesc}
             onChange={(e) => setTaskDesc(e.target.value)}
           />
