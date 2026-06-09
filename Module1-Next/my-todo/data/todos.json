@@ -1,28 +1,14 @@
 {
   "tasks": [
     {
-      "id": "1",
-      "text": "grocery shopping new"
+      "text": "titlej",
+      "description": "descdadasa",
+      "id": "5FEHEf4tfd0"
     },
     {
-      "id": "LgOm5lfzLNQ",
-      "text": "a new task"
-    },
-    {
-      "id": "sX5_pz1LpFY",
-      "text": "add new task"
-    },
-    {
-      "id": "_0FZPZvaAio",
-      "text": "dsada"
-    },
-    {
-      "id": "qGOPcdPTxGY",
-      "text": "wdwdwd"
-    },
-    {
-      "id": "8g9gGa5Ntik",
-      "text": "fwerw "
+      "text": "task1",
+      "description": "task1 des\nedit",
+      "id": "4KlPI034XyY"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

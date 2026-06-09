@@ -18,6 +18,17 @@ export const getAllTodos = async (): Promise<ITask[]> => {
   return todos;
 };
 
+export const getTodo = async (id: string): Promise<ITask> => {
+  const res = await fetch(`${baseUrl}/tasks/${id}`, { cache: "no-store" });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch task: ${res.status}`);
+  }
+
+  const todo = await res.json();
+  return todo;
+};
+
 export const addTodo = async (todo: NewTask): Promise<ITask> => {
   const res = await fetch(`${baseUrl}/tasks`, {
     method: "POST",
@@ -41,7 +52,10 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ text: todo.text }),
+    body: JSON.stringify({
+      text: todo.text,
+      description: todo.description,
+    }),
   });
 
   if (!res.ok) {
