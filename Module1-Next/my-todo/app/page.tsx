@@ -1,10 +1,7 @@
-import { getAllTodos } from "@/api";
 import AddTask from "./components/AddTask";
 import TodoList from "./components/TodoList";
 
-export default async function Home() {
-  const tasks = await getAllTodos();
-
+export default function Home() {
   return (
     // Tailwind ailwind uses utility classes
     // ready-made class names: each class means one CSS rule
@@ -13,7 +10,7 @@ export default async function Home() {
         <h1 className="text-2xl font-bold">Todo List App</h1>
         <AddTask />
       </div>
-      <TodoList tasks={tasks} />
+      <TodoList />
     </main>
   );
 }

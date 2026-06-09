@@ -1,5 +1,6 @@
-import { ITask } from "@/types/tasks";
-import React from "react";
+"use client";
+
+import { getAllTodos } from "@/api";
 import Task from "./Task";
 import {
   Table,
@@ -8,27 +9,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
 
-interface TodoListProps {
-  tasks: ITask[];
-}
+const TodoList = () => {
+  const {
+    data: tasks = [],
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getAllTodos,
+  });
 
-const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow className="hover:bg-transparent">
-          <TableHead>Tasks</TableHead>
-          <TableHead>Description</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {tasks.map((task) => (
-          <Task key={task.id} task={task} />
-        ))}
-      </TableBody>
-    </Table>
+    <div className="flex flex-col gap-3">
+      {isPending && <p className="text-sm text-muted-foreground">Loading...</p>}
+      {isError && (
+        <p className="text-sm text-destructive">
+          {error instanceof Error ? error.message : "Failed to load tasks"}
+        </p>
+      )}
+      <Table>
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead>Tasks</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {tasks.map((task) => (
+            <Task key={task.id} task={task} />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
