@@ -8,6 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableCell,
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 
@@ -24,12 +25,6 @@ const TodoList = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      {isPending && <p className="text-sm text-muted-foreground">Loading...</p>}
-      {isError && (
-        <p className="text-sm text-destructive">
-          {error instanceof Error ? error.message : "Failed to load tasks"}
-        </p>
-      )}
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
@@ -38,7 +33,26 @@ const TodoList = () => {
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
+
         <TableBody>
+          {isPending && (
+            <TableRow>
+              <TableCell colSpan={3} className="text-sm text-muted-foreground">
+                Loading...
+              </TableCell>
+            </TableRow>
+          )}
+
+          {isError && (
+            <TableRow>
+              <TableCell colSpan={3} className="text-sm text-destructive">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to load tasks"}
+              </TableCell>
+            </TableRow>
+          )}
+
           {tasks.map((task) => (
             <Task key={task.id} task={task} />
           ))}
