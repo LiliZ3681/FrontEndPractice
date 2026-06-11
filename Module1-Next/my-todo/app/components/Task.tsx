@@ -3,22 +3,28 @@
 import { deleteTodo } from "@/api";
 import { ITask } from "@/types/tasks";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { CiEdit } from "react-icons/ci";
 import { MdDeleteOutline } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface TaskProps {
   task: ITask;
 }
 
 const Task: React.FC<TaskProps> = ({ task }) => {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const handleDelete = async () => {
-    await deleteTodo(task.id);
-    router.refresh();
+  const deleteMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] }); //Refetch
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate(task.id);
   };
 
   return (

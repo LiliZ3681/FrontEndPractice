@@ -4,12 +4,22 @@ import { addTodo } from "@/api";
 import TaskForm from "@/app/components/TaskForm";
 import { TaskFormValues } from "@/types/tasks";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function AddTaskPage() {
   const router = useRouter();
 
+  const queryClient = useQueryClient();
+
+  const addMutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
   const saveTask = async (data: TaskFormValues) => {
-    await addTodo({
+    await addMutation.mutateAsync({
       text: data.text,
       description: data.description,
     });
