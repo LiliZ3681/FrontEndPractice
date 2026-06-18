@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "todo title",
+      "description": "todo description",
+      "completed": false,
+      "date": "2026-06-18"
+    },
+    {
+      "id": 2,
+      "title": "todo title 2",
+      "description": "todo description 2",
+      "completed": false,
+      "date": "2026-06-18"
+    }
+  ]
+}

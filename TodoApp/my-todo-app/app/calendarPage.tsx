@@ -1,9 +1,116 @@
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { getAllTodos } from "../api";
+import { ITask } from "../types/tasks";
+
+const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function getWeekDays() {
+  const today = new Date();
+  const monday = new Date(today);
+  const daysSinceMonday = (today.getDay() + 6) % 7; //day of the week
+  monday.setDate(today.getDate() - daysSinceMonday);
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + index);
+
+    return {
+      id: date.toISOString(),
+      dateString: date.toISOString().split("T")[0],
+      dayName: dayNames[date.getDay()],
+      dayNumber: date.getDate(),
+      fullDate: date.toLocaleDateString("en-AU", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }),
+    };
+  });
+}
 
 export default function CalendarPage() {
+  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const weekDays = useMemo(() => getWeekDays(), []);
+  const todayId = new Date().toDateString();
+  const defaultSelectedDay = weekDays.find(
+    (day) => new Date(day.id).toDateString() === todayId,
+  );
+  const [selectedDayId, setSelectedDayId] = useState(
+    defaultSelectedDay?.id ?? weekDays[0].id,
+  );
+  const selectedDay = weekDays.find((day) => day.id === selectedDayId);
+  const selectedDayTasks = tasks.filter(
+    (task) => task.date === selectedDay?.dateString,
+  );
+
+  useEffect(() => {
+    const loadTasks = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const todos = await getAllTodos();
+        setTasks(todos);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load tasks");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadTasks();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>CalendarPage</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>My Todo</Text>
+        <Text style={styles.subtitle}>Choose a day and plan what matters.</Text>
+      </View>
+
+      <View style={styles.weekRow}>
+        {weekDays.map((day) => {
+          const isSelected = day.id === selectedDayId;
+
+          return (
+            <Pressable
+              key={day.id}
+              style={[styles.dayButton, isSelected && styles.selectedDayButton]}
+              onPress={() => setSelectedDayId(day.id)}
+            >
+              <Text
+                style={[styles.dayName, isSelected && styles.selectedDayText]}
+              >
+                {day.dayName}
+              </Text>
+              <Text
+                style={[styles.dayNumber, isSelected && styles.selectedDayText]}
+              >
+                {day.dayNumber}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
+
+      <View style={styles.todoPanel}>
+        <Text style={styles.selectedDate}>{selectedDay?.fullDate}</Text>
+        {isLoading && <Text style={styles.emptyText}>Loading todos...</Text>}
+        {error && <Text style={styles.errorText}>{error}</Text>}
+        {!isLoading &&
+          !error &&
+          selectedDayTasks.map((task) => (
+            <View key={task.id} style={styles.taskCard}>
+              <Text style={styles.taskTitle}>{task.title}</Text>
+              <Text style={styles.taskDescription}>{task.description}</Text>
+            </View>
+          ))}
+        {!isLoading && !error && selectedDayTasks.length === 0 && (
+          <Text style={styles.emptyText}>No todos yet.</Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -11,48 +118,89 @@ export default function CalendarPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
     paddingHorizontal: 24,
     paddingVertical: 64,
     backgroundColor: "#f6f7f2",
   },
-  welcomeContent: {
-    gap: 18,
-    paddingTop: 56,
-  },
-  badge: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 999,
-    backgroundColor: "#233d4d",
-  },
-  badgeText: {
-    color: "#ffffff",
-    fontSize: 14,
-    fontWeight: "700",
+  header: {
+    gap: 8,
+    marginBottom: 28,
   },
   title: {
     color: "#172026",
-    fontSize: 42,
+    fontSize: 36,
     fontWeight: "800",
-    lineHeight: 48,
+    lineHeight: 42,
   },
   subtitle: {
     color: "#4b5a62",
-    fontSize: 18,
-    lineHeight: 28,
+    fontSize: 16,
+    lineHeight: 24,
   },
-  button: {
-    height: 56,
+  weekRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 28,
+  },
+  dayButton: {
+    flex: 1,
+    minHeight: 78,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 16,
+    backgroundColor: "#ffffff",
+  },
+  selectedDayButton: {
     backgroundColor: "#fe7f2d",
   },
-  buttonText: {
-    color: "#ffffff",
-    fontSize: 18,
+  dayName: {
+    color: "#4b5a62",
+    fontSize: 13,
     fontWeight: "700",
+  },
+  dayNumber: {
+    color: "#172026",
+    fontSize: 20,
+    fontWeight: "800",
+  },
+  selectedDayText: {
+    color: "#ffffff",
+  },
+  todoPanel: {
+    flex: 1,
+    borderRadius: 22,
+    padding: 20,
+    backgroundColor: "#ffffff",
+  },
+  selectedDate: {
+    color: "#172026",
+    fontSize: 22,
+    fontWeight: "800",
+    marginBottom: 12,
+  },
+  emptyText: {
+    color: "#6a767d",
+    fontSize: 16,
+  },
+  errorText: {
+    color: "#b42318",
+    fontSize: 16,
+  },
+  taskCard: {
+    gap: 6,
+    padding: 14,
+    marginBottom: 12,
+    borderRadius: 16,
+    backgroundColor: "#f6f7f2",
+  },
+  taskTitle: {
+    color: "#172026",
+    fontSize: 17,
+    fontWeight: "800",
+  },
+  taskDescription: {
+    color: "#4b5a62",
+    fontSize: 15,
+    lineHeight: 22,
   },
 });
