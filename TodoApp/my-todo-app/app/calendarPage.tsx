@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { addTodo, deleteTodo, editTodo, getAllTodos } from "../api";
 import AddTodoModal from "../components/AddTodoModal";
@@ -7,6 +7,7 @@ import TodoStatusFilter from "../components/TodoStatusFilter";
 import WeekDaySelector from "../components/WeekDaySelector";
 import { StatusFilter, WeekDay } from "../types/calendar";
 import { ITask, NewTask } from "../types/tasks";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -35,11 +36,18 @@ function getWeekDays(): WeekDay[] {
 }
 
 export default function CalendarPage() {
-  const [tasks, setTasks] = useState<ITask[]>([]); // store todos
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const {
+    data: tasks = [],
+    isPending,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: getAllTodos,
+  });
   const weekDays = useMemo(() => getWeekDays(), []);
   // useMemo: cache result of weekDays between re-renders
 
@@ -61,47 +69,41 @@ export default function CalendarPage() {
     return true;
   });
 
+  const addTodoMutation = useMutation({
+    mutationFn: addTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  const editTodoMutation = useMutation({
+    mutationFn: editTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+    },
+  });
+
   const saveTodo = async (todo: NewTask) => {
-    const newTodo = await addTodo(todo);
-    setTasks((currentTasks) => [...currentTasks, newTodo]);
+    await addTodoMutation.mutateAsync(todo);
   };
 
-  const toggleTodoComplete = async (task: ITask) => {
-    const updatedTodo = await editTodo({
+  const toggleTodoComplete = (task: ITask) => {
+    editTodoMutation.mutate({
       ...task,
       completed: !task.completed,
     });
-
-    setTasks((currentTasks) =>
-      currentTasks.map((currentTask) =>
-        currentTask.id === updatedTodo.id ? updatedTodo : currentTask,
-      ),
-    );
   };
 
-  const removeTodo = async (id: number) => {
-    await deleteTodo(id);
-    setTasks((currentTasks) =>
-      currentTasks.filter((currentTask) => currentTask.id !== id),
-    );
+  const removeTodo = (id: number) => {
+    deleteTodoMutation.mutate(id);
   };
-
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const todos = await getAllTodos();
-        setTasks(todos);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load tasks");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTasks();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -121,10 +123,14 @@ export default function CalendarPage() {
           <Text style={styles.selectedDate}>{selectedDay?.fullDate}</Text>
           <TodoStatusFilter value={statusFilter} onChange={setStatusFilter} />
         </View>
-        {isLoading && <Text style={styles.emptyText}>Loading todos...</Text>}
-        {error && <Text style={styles.errorText}>{error}</Text>}
-        {!isLoading &&
-          !error &&
+        {isPending && <Text style={styles.emptyText}>Loading todos...</Text>}
+        {isError && (
+          <Text style={styles.errorText}>
+            {error instanceof Error ? error.message : "Failed to load tasks"}
+          </Text>
+        )}
+        {!isPending &&
+          !isError &&
           filteredTasks.map((task) => (
             <TodoCard
               key={task.id}
@@ -133,7 +139,7 @@ export default function CalendarPage() {
               onDelete={removeTodo}
             />
           ))}
-        {!isLoading && !error && filteredTasks.length === 0 && (
+        {!isPending && !isError && filteredTasks.length === 0 && (
           <Text style={styles.emptyText}>No todos yet.</Text>
         )}
       </View>
