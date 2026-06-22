@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { getAllTodos } from "../api";
+import { addTodo, deleteTodo, editTodo, getAllTodos } from "../api";
 import AddTodoModal from "../components/AddTodoModal";
-import { ITask } from "../types/tasks";
+import { ITask, NewTask } from "../types/tasks";
 
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -51,14 +51,29 @@ export default function CalendarPage() {
     (task) => task.date === selectedDay?.dateString,
   );
 
-  const saveTodo = (todo: Omit<ITask, "id">) => {
-    setTasks((currentTasks) => [
-      ...currentTasks,
-      {
-        id: Date.now(),
-        ...todo,
-      },
-    ]);
+  const saveTodo = async (todo: NewTask) => {
+    const newTodo = await addTodo(todo);
+    setTasks((currentTasks) => [...currentTasks, newTodo]);
+  };
+
+  const toggleTodoComplete = async (task: ITask) => {
+    const updatedTodo = await editTodo({
+      ...task,
+      completed: !task.completed,
+    });
+
+    setTasks((currentTasks) =>
+      currentTasks.map((currentTask) =>
+        currentTask.id === updatedTodo.id ? updatedTodo : currentTask,
+      ),
+    );
+  };
+
+  const removeTodo = async (id: number) => {
+    await deleteTodo(id);
+    setTasks((currentTasks) =>
+      currentTasks.filter((currentTask) => currentTask.id !== id),
+    );
   };
 
   useEffect(() => {
@@ -120,8 +135,39 @@ export default function CalendarPage() {
           !error &&
           selectedDayTasks.map((task) => (
             <View key={task.id} style={styles.taskCard}>
-              <Text style={styles.taskTitle}>{task.title}</Text>
-              <Text style={styles.taskDescription}>{task.description}</Text>
+              <Pressable
+                style={[
+                  styles.checkbox,
+                  task.completed && styles.checkedCheckbox,
+                ]}
+                onPress={() => toggleTodoComplete(task)}
+              >
+                {task.completed && <Text style={styles.checkMark}>✓</Text>}
+              </Pressable>
+              <View style={styles.taskContent}>
+                <Text
+                  style={[
+                    styles.taskTitle,
+                    task.completed && styles.completedTaskText,
+                  ]}
+                >
+                  {task.title}
+                </Text>
+                <Text
+                  style={[
+                    styles.taskDescription,
+                    task.completed && styles.completedTaskText,
+                  ]}
+                >
+                  {task.description}
+                </Text>
+              </View>
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => removeTodo(task.id)}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </Pressable>
             </View>
           ))}
         {!isLoading && !error && selectedDayTasks.length === 0 && (
@@ -233,11 +279,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   taskCard: {
-    gap: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
     padding: 14,
     marginBottom: 12,
     borderRadius: 16,
     backgroundColor: "#f6f7f2",
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: "#fe7f2d",
+    borderRadius: 5,
+    backgroundColor: "#ffffff",
+  },
+  checkedCheckbox: {
+    backgroundColor: "#fe7f2d",
+  },
+  checkMark: {
+    color: "#ffffff",
+    fontSize: 13,
+    fontWeight: "900",
+  },
+  taskContent: {
+    flex: 1,
+    gap: 4,
   },
   taskTitle: {
     color: "#172026",
@@ -248,5 +318,21 @@ const styles = StyleSheet.create({
     color: "#4b5a62",
     fontSize: 15,
     lineHeight: 22,
+  },
+  completedTaskText: {
+    color: "#8a969c",
+    textDecorationLine: "line-through",
+  },
+  deleteButton: {
+    minHeight: 34,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: "#fee4df",
+  },
+  deleteButtonText: {
+    color: "#b42318",
+    fontSize: 13,
+    fontWeight: "800",
   },
 });

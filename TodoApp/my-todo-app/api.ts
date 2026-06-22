@@ -1,4 +1,4 @@
-import { ITask } from "./types/tasks";
+import { ITask, NewTask } from "./types/tasks";
 
 const baseUrl = process.env.EXPO_PUBLIC_API_URL;
 
@@ -27,49 +27,46 @@ export const getAllTodos = async (): Promise<ITask[]> => {
 //   return todo;
 // };
 
-// export const addTodo = async (todo: NewTask): Promise<ITask> => {
-//   const res = await fetch(`${baseUrl}/tasks`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(todo),
-//   });
+export const addTodo = async (todo: NewTask): Promise<ITask> => {
+  const res = await fetch(`${baseUrl}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
 
-//   if (!res.ok) {
-//     throw new Error(`Failed to add task: ${res.status}`);
-//   }
+  if (!res.ok) {
+    throw new Error(`Failed to add task: ${res.status}`);
+  }
 
-//   const newTodo = await res.json();
-//   return newTodo;
-// };
+  const newTodo = await res.json();
+  return newTodo;
+};
 
-// export const editTodo = async (todo: ITask): Promise<ITask> => {
-//   const res = await fetch(`${baseUrl}/tasks/${todo.id}`, {
-//     method: "PATCH",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       text: todo.text,
-//       description: todo.description,
-//     }),
-//   });
+export const editTodo = async (todo: ITask): Promise<ITask> => {
+  const res = await fetch(`${baseUrl}/tasks/${todo.id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
 
-//   if (!res.ok) {
-//     throw new Error(`Failed to edit task: ${res.status}`);
-//   }
+  if (!res.ok) {
+    throw new Error(`Failed to edit task: ${res.status}`);
+  }
 
-//   const updatedTodo = await res.json();
-//   return updatedTodo;
-// };
+  const updatedTodo = await res.json();
+  return updatedTodo;
+};
 
-// export const deleteTodo = async (id: string): Promise<void> => {
-//   const res = await fetch(`${baseUrl}/tasks/${id}`, {
-//     method: "DELETE",
-//   });
+export const deleteTodo = async (id: number): Promise<void> => {
+  const res = await fetch(`${baseUrl}/tasks/${id}`, {
+    method: "DELETE",
+  });
 
-//   if (!res.ok) {
-//     throw new Error(`Failed to delete task: ${res.status}`);
-//   }
-// };
+  if (!res.ok) {
+    throw new Error(`Failed to delete task: ${res.status}`);
+  }
+};

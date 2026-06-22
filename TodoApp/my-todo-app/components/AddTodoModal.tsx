@@ -23,7 +23,7 @@ type AddTodoModalProps = {
   visible: boolean;
   selectedDate: string;
   onClose: () => void;
-  onSave: (todo: TaskFormValues) => void;
+  onSave: (todo: TaskFormValues) => Promise<void>;
 };
 
 export default function AddTodoModal({
@@ -63,8 +63,8 @@ export default function AddTodoModal({
     onClose();
   };
 
-  const handleSave = (data: AddTodoFormValues) => {
-    onSave({
+  const handleSave = async (data: AddTodoFormValues) => {
+    await onSave({
       title: data.title,
       description: data.description ?? "",
       completed: false,
