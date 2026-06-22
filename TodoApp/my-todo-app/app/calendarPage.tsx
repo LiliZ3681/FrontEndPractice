@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { getAllTodos } from "../api";
+import AddTodoModal from "../components/AddTodoModal";
 import { ITask } from "../types/tasks";
 
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -9,7 +10,7 @@ function getWeekDays() {
   const today = new Date();
   const monday = new Date(today);
   const daysSinceMonday = (today.getDay() + 6) % 7; //day of the week
-  monday.setDate(today.getDate() - daysSinceMonday);
+  monday.setDate(today.getDate() - daysSinceMonday); // found Monday
 
   return Array.from({ length: 7 }, (_, index) => {
     const date = new Date(monday);
@@ -30,10 +31,14 @@ function getWeekDays() {
 }
 
 export default function CalendarPage() {
-  const [tasks, setTasks] = useState<ITask[]>([]);
+  const [tasks, setTasks] = useState<ITask[]>([]); // store todos
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const weekDays = useMemo(() => getWeekDays(), []);
+  // useMemo: cache result of weekDays between re-renders
+
+  // make the defualt date to "today"
   const todayId = new Date().toDateString();
   const defaultSelectedDay = weekDays.find(
     (day) => new Date(day.id).toDateString() === todayId,
@@ -45,6 +50,16 @@ export default function CalendarPage() {
   const selectedDayTasks = tasks.filter(
     (task) => task.date === selectedDay?.dateString,
   );
+
+  const saveTodo = (todo: Omit<ITask, "id">) => {
+    setTasks((currentTasks) => [
+      ...currentTasks,
+      {
+        id: Date.now(),
+        ...todo,
+      },
+    ]);
+  };
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -96,7 +111,9 @@ export default function CalendarPage() {
       </View>
 
       <View style={styles.todoPanel}>
-        <Text style={styles.selectedDate}>{selectedDay?.fullDate}</Text>
+        <View style={styles.todoPanelHeader}>
+          <Text style={styles.selectedDate}>{selectedDay?.fullDate}</Text>
+        </View>
         {isLoading && <Text style={styles.emptyText}>Loading todos...</Text>}
         {error && <Text style={styles.errorText}>{error}</Text>}
         {!isLoading &&
@@ -111,6 +128,20 @@ export default function CalendarPage() {
           <Text style={styles.emptyText}>No todos yet.</Text>
         )}
       </View>
+      <Pressable
+        style={styles.addButton}
+        onPress={() => setIsAddModalOpen(true)}
+      >
+        <Text style={styles.addButtonText}>Add Todo</Text>
+      </Pressable>
+      {selectedDay && (
+        <AddTodoModal
+          visible={isAddModalOpen}
+          selectedDate={selectedDay.dateString}
+          onClose={() => setIsAddModalOpen(false)}
+          onSave={saveTodo}
+        />
+      )}
     </View>
   );
 }
@@ -172,11 +203,26 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#ffffff",
   },
+  todoPanelHeader: {
+    gap: 12,
+    marginBottom: 16,
+  },
   selectedDate: {
     color: "#172026",
     fontSize: 22,
     fontWeight: "800",
-    marginBottom: 12,
+  },
+  addButton: {
+    height: 46,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 14,
+    backgroundColor: "#fe7f2d",
+  },
+  addButtonText: {
+    color: "#ffffff",
+    fontSize: 15,
+    fontWeight: "800",
   },
   emptyText: {
     color: "#6a767d",
