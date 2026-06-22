@@ -4,7 +4,7 @@
       "id": "1",
       "title": "todo title",
       "description": "todo description",
-      "completed": false,
+      "completed": true,
       "date": "2026-06-22"
     },
     {
