@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "todo title",
+      "description": "todo description",
+      "completed": false,
+      "date": "2026-06-22"
+    },
+    {
+      "id": "2",
+      "title": "todo title 2",
+      "description": "todo description 2",
+      "completed": true,
+      "date": "2026-06-23"
+    },
+    {
+      "title": "Add",
+      "description": "Addd",
+      "completed": true,
+      "date": "2026-06-22",
+      "id": "SA0dI8uwEAo"
+    },
+    {
+      "title": "Add",
+      "description": "Fgjknvds",
+      "completed": false,
+      "date": "2026-06-24",
+      "id": "M9ayQD7_7hc"
+    },
+    {
+      "title": "Work hard",
+      "description": "Working",
+      "completed": false,
+      "date": "2026-06-23",
+      "id": "i5hTHAXFKa4"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
