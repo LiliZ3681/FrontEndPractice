@@ -1,0 +1,15 @@
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/bin/Debug/net10.0/myprogram
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/bin/Debug/net10.0/myprogram.deps.json
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/bin/Debug/net10.0/myprogram.runtimeconfig.json
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/bin/Debug/net10.0/myprogram.dll
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/bin/Debug/net10.0/myprogram.pdb
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.GeneratedMSBuildEditorConfig.editorconfig
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.AssemblyInfoInputs.cache
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.AssemblyInfo.cs
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.csproj.CoreCompileInputs.cache
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.sourcelink.json
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.dll
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/refint/myprogram.dll
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.pdb
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/myprogram.genruntimeconfig.cache
+/Users/yuxinzheng/Documents/BlotzTask/Practice/FrontEndPractice/BackendPractice/myprogram/obj/Debug/net10.0/ref/myprogram.dll
