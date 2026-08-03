@@ -143,3 +143,7 @@ vite.config.ts.timestamp-*
 .vite/
 
 .DS_Store
+
+# .NET build output
+**/bin/
+**/obj/
