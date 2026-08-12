@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    // Attributes in [], will need to follow with a declaration
+    // Attributes in [] attach metadata to the declaration immediately below them.
     [Route("api/stock")]
-    [ApiController] //type
+    [ApiController] //type: Enables API-specific controller behavior.
                     // Attribute   → tells ASP.NET Core when/how something is accessed
                     // Declaration → defines what that class or method actually does
 
@@ -29,7 +30,9 @@ namespace api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var stocks = _context.Stocks.ToList();
+            var stocks = _context.Stocks
+                .Select(s => s.ToStockDto())
+                .ToList();
 
             return Ok(stocks);
         }
@@ -43,7 +46,7 @@ namespace api.Controllers
             {
                 return NotFound();
             }
-            return Ok(stock);
+            return Ok(stock.ToStockDto());
         }
     }
 }
